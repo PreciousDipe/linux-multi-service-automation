@@ -1,0 +1,22 @@
+[Unit]
+Description=Backend Application Service
+After=network.target
+
+[Service]
+Type=simple
+User=appsvc
+Group=appsvc
+WorkingDirectory=/opt/backend-app
+ExecStart=/opt/backend-app/venv/bin/gunicorn --workers 2 --bind 127.0.0.1:3000 app:app
+Restart=on-failure
+RestartSec=5
+
+# Hardening
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/backend-app /var/log/myapp
+
+[Install]
+WantedBy=multi-user.target

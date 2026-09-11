@@ -1,0 +1,37 @@
+/var/log/myapp/*.log {
+    daily
+    rotate 14
+    compress
+    delaycompress
+    missingok
+    notifempty
+    create 0640 appsvc appsvc
+    sharedscripts
+    postrotate
+        systemctl reload-or-restart backend-app.service >/dev/null 2>&1 || true
+    endscript
+}
+
+/var/log/nginx/backend-*.log {
+    daily
+    rotate 14
+    compress
+    delaycompress
+    missingok
+    notifempty
+    create 0640 www-data adm
+    sharedscripts
+    postrotate
+        systemctl reload nginx >/dev/null 2>&1 || true
+    endscript
+}
+
+/var/log/backend-health.log /var/log/backend-backup.log {
+    weekly
+    rotate 8
+    compress
+    delaycompress
+    missingok
+    notifempty
+    create 0640 root root
+}
